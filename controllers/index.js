@@ -15,6 +15,7 @@ const TOKEN_EXPIRE_SENCOND = 36000;
 // 配置对象
 let exportObj = {
   login,
+  regist,
 };
 // 导出对象，供其它模块调用
 module.exports = exportObj;
@@ -126,6 +127,48 @@ function login(req, res) {
           });
       },
     ],
+  };
+  // 执行公共方法中的autoFn方法，返回数据
+  Common.autoFn(tasks, res, resObj);
+}
+
+// 添加用户方法
+function regist(req, res) {
+  // 定义一个返回对象
+  const resObj = Common.clone(Constant.DEFAULT_SUCCESS);
+  // 定义一个async任务
+  let tasks = {
+    // 校验参数方法
+    checkParams: (cb) => {
+      // 调用公共方法中的校验参数方法，成功继续后面操作，失败则传递错误信息到async最终方法
+      Common.checkParams(
+        req.body,
+        ["username", "password", "name", "role"],
+        cb
+      );
+    },
+    // 添加方法，依赖校验参数方法
+    add: (cb) => {
+      // 使用admin的model中的方法插入到数据库
+      UserModel.create({
+        username: req.body.username,
+        password: req.body.password,
+        name: req.body.name,
+        role: req.body.role,
+      })
+        .then(function (result) {
+          // 插入结果处理
+          // 继续后续操作
+          cb(null);
+        })
+        .catch(function (err) {
+          // 错误处理
+          // 打印错误日志
+          console.log(err);
+          // 传递错误信息到async最终方法
+          cb(Constant.DEFAULT_ERROR);
+        });
+    },
   };
   // 执行公共方法中的autoFn方法，返回数据
   Common.autoFn(tasks, res, resObj);
