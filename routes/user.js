@@ -12,6 +12,8 @@ router.get("/:uid", UserController.info);
 router.post("/", UserController.add);
 // 定义修改用户路由，put请求
 router.put("/", UserController.update);
+// 定义更改用户密码路由，put请求
+router.put("/pwd", UserController.updatePwd);
 // 定义删除用户路由，delete请求
 router.delete("/", UserController.remove);
 
