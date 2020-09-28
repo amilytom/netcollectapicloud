@@ -45,6 +45,12 @@ function list(req, res) {
         if (req.query.pid) {
           whereCondition.pid = req.query.pid;
         }
+        if (req.query.isgood) {
+          whereCondition.isgood = req.query.isgood;
+        }
+        if (req.query.uid) {
+          whereCondition.uid = req.query.uid;
+        }
         // 判断是否传入了dropList参数
         if (req.query.dropList) {
           // 如果传入了，不分页查询
@@ -170,7 +176,7 @@ function add(req, res) {
     // 校验参数方法
     checkParams: (cb) => {
       // 调用公共方法中的校验参数方法，成功继续后面操作，失败则传递错误信息到async最终方法
-      Common.checkParams(req.body, ["name", "pid", "isgood"], cb);
+      Common.checkParams(req.body, ["name", "pid", "uid", "isgood"], cb);
     },
     // 添加方法，依赖校验参数方法
     add: (cb) => {
@@ -178,6 +184,7 @@ function add(req, res) {
       CateModel.create({
         name: req.body.name,
         pid: req.body.pid,
+        uid: req.body.uid,
         isgood: req.body.isgood,
       })
         .then(function (result) {
@@ -207,7 +214,7 @@ function update(req, res) {
     // 校验参数方法
     checkParams: (cb) => {
       // 调用公共方法中的校验参数方法，成功继续后面操作，失败则传递错误信息到async最终方法
-      Common.checkParams(req.body, ["cid", "name", "pid", "isgood"], cb);
+      Common.checkParams(req.body, ["cid", "name", "pid", "uid", "isgood"], cb);
     },
     // 更新方法，依赖校验参数方法
     update: (cb) => {
@@ -216,6 +223,7 @@ function update(req, res) {
         {
           name: req.body.name,
           pid: req.body.pid,
+          uid: req.body.uid,
           isgood: req.body.isgood,
         },
         {

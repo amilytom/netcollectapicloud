@@ -55,6 +55,9 @@ function list(req, res) {
         if (req.query.key) {
           whereCondition.key = { [Op.like]: `%${req.query.key}%` };
         }
+        if (req.query.cat) {
+          whereCondition.cat = req.query.cat;
+        }
         searchOption = {
           where: whereCondition,
           offset: offset,
