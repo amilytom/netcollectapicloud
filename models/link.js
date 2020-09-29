@@ -51,8 +51,20 @@ const Link = seque.define(
   }
 );
 
+// 链接属于分类表，一个分类表包含多个链接，将链接表link和分类表cate进行关联
+Link.belongsTo(CateModel, {
+  foreignKey: "cat",
+  targetKey: "cid",
+  constraints: false,
+});
+
+// Link.associate = function () {
+//   Link.belongsTo(CateModel, {
+//     foreignKey: "cat",
+//     targetKey: "cid",
+//     constraints: false,
+//   });
+// };
+
 // 导出model
 module.exports = Link;
-
-// 链接属于分类表，一个分类表包含多个链接，将链接表link和分类表cate进行关联
-Link.belongsTo(CateModel, { foreignKey: "cat", constraints: false });

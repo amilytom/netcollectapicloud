@@ -6,6 +6,9 @@ const LinkModel = require("../models/link");
 // 引入cate表的model
 const CateModel = require("../models/cate");
 
+// 引入user表的model
+const UserModel = require("../models/user");
+
 // 引入常量
 const Constant = require("../constant/constant");
 // 引入dateformat包
@@ -47,6 +50,7 @@ function list(req, res) {
         let limit = parseInt(req.query.rows) || 20;
         // 设定一个查询条件对象
         let whereCondition = {};
+        let whereUid = {};
         // 如果查询标题存在，查询对象增加标题字段
         if (req.query.title) {
           whereCondition.title = { [Op.like]: `%${req.query.title}%` };
@@ -58,15 +62,27 @@ function list(req, res) {
         if (req.query.cat) {
           whereCondition.cat = req.query.cat;
         }
+        if (req.query.uid) {
+          whereUid.uid = req.query.uid;
+        }
         searchOption = {
           where: whereCondition,
           offset: offset,
           limit: limit,
           order: [["created_at", "DESC"]],
-          // 关联usercate表进行联表查询
+          // 关联cate表进行联表查询
           include: [
             {
               model: CateModel,
+              attributes: ["cid", "name", "uid"],
+              where: whereUid,
+              include: [
+                {
+                  model: UserModel,
+                  as: "user",
+                  attributes: ["uid", "username", "name"],
+                },
+              ],
             },
           ],
         };
@@ -88,6 +104,7 @@ function list(req, res) {
                 // 联表读取Cate表中的cid
                 cid: v.Cate.cid,
                 catename: v.Cate.name,
+                //11uid: v.Cate.user.uid,
                 createdAt: dateFormat(v.createdAt, "yyyy-mm-dd HH:MM:ss"),
               };
               list.push(obj);

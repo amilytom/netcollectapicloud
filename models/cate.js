@@ -3,6 +3,11 @@ const Sequelize = require("sequelize");
 // 引入数据库实例
 const seque = require("../utils/seque");
 
+// 引入user表的model
+const UserModel = require("./user");
+
+const LinkModel = require("./link");
+
 // 定义model
 const Cate = seque.define(
   "Cate",
@@ -24,6 +29,11 @@ const Cate = seque.define(
       type: Sequelize.INTEGER,
       allowNull: false,
     },
+    // 用户id
+    uid: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
     // 是否推荐
     isgood: {
       type: Sequelize.INTEGER,
@@ -37,6 +47,31 @@ const Cate = seque.define(
     tableName: "coll_cate",
   }
 );
+
+// Cate.associate = function () {
+//   Cate.belongsTo(UserModel, {
+//     foreignKey: "uid",
+//     targetKey: "uid",
+//     constraints: false,
+//   });
+//   Cate.hasMany(LinkModel, {
+//     foreignKey: "cid",
+//     targetKey: "cat",
+//     constraints: false,
+//   });
+// };
+
+Cate.belongsTo(UserModel, {
+  as: "user",
+  foreignKey: "uid",
+  targetKey: "uid",
+  constraints: false,
+});
+// Cate.hasMany(LinkModel, {
+//   foreignKey: "cid",
+//   sourceKey: "cat",
+//   constraints: false,
+// });
 
 // 导出model
 module.exports = Cate;
